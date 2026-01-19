@@ -1,9 +1,9 @@
 ---
-
+```
 # 🚀 **AWS Terraform Foundation – FinTech Platform**
 
 > **Enterprise-grade AWS Cloud Foundation for a FinTech Digital Banking Platform built with Terraform**
-
+```
 ---
 
 ## 📌 **Project Overview**
