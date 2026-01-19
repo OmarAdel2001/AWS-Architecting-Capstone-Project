@@ -1,279 +1,246 @@
-🚀 AWS Terraform Foundation – Professional Documentation
-📌 1. Project Overview
-Project Name:
+---
 
-AWS Terraform Foundation – FinTech Platform
+# 🚀 **AWS Terraform Foundation – FinTech Platform**
 
-Purpose:
+> **Enterprise-grade AWS Cloud Foundation for a FinTech Digital Banking Platform built with Terraform**
 
-This project implements a secure, scalable, and production-ready AWS cloud foundation using Terraform Infrastructure as Code (IaC).
+---
 
-It is designed to support a FinTech digital banking platform with best practices for:
+## 📌 **Project Overview**
 
-Multi-account architecture
+This repository contains a **secure, scalable, and production-ready AWS cloud foundation** implemented using **Terraform Infrastructure as Code (IaC)**.
 
-Network segmentation
+It is designed to support a **FinTech digital banking platform**, following:
 
-Security and compliance
+* ✅ AWS Well-Architected Framework
+* ✅ Multi-account architecture
+* ✅ Strong security controls
+* ✅ High availability
+* ✅ Encryption by default
+* ✅ Centralized monitoring
+* ✅ Automated infrastructure deployment
 
-State management
+---
 
-High availability
+## 🎯 **Objectives**
 
-Encryption
+This infrastructure provides:
 
-Monitoring
+* Secure baseline AWS environment
+* Repeatable deployments with Terraform
+* Enterprise-grade cloud design
+* Support for:
 
-Secure secrets management
+  * **Amazon ECS** (container workloads)
+  * **Aurora PostgreSQL** (managed database)
+  * **ElastiCache Redis** (in-memory cache)
+  * **S3 Data Lake**
+  * **CloudWatch Monitoring**
+  * **AWS Secrets Manager**
+  * **KMS Encryption**
+  * **IAM Least Privilege**
+  * **Tagging Governance**
 
-Scalable application hosting
+---
 
-🎯 2. Objectives
+# 🏗 **High-Level Architecture**
 
-This infrastructure aims to:
+### 🔹 **Logical Architecture Diagram (Simplified)**
 
-Provide a secure baseline AWS environment
+```mermaid
+graph TD;
+    User --> ALB[Application Load Balancer]
+    ALB --> ECS[ECS Cluster]
+    ECS --> RDS[Aurora PostgreSQL]
+    ECS --> Redis[ElastiCache Redis]
+    ECS --> S3[S3 Data Lake]
+    ECS --> Secrets[AWS Secrets Manager]
+    RDS --> KMS[AWS KMS]
+    Redis --> KMS
+    S3 --> KMS
+    CloudWatch[CloudWatch Monitoring] --> ECS
+    CloudWatch --> RDS
+    CloudWatch --> Redis
+```
 
-Follow AWS Well-Architected Framework
+---
 
-Use Terraform for repeatable deployments
+### 🔹 **AWS Multi-Account Architecture (Organizations)**
 
-Support:
-
-ECS workloads
-
-Aurora PostgreSQL database
-
-ElastiCache Redis
-
-Secure S3 data lake
-
-Centralized logging & monitoring
-
-Secure secrets storage
-
-IAM least privilege
-
-Centralized tagging governance
-
-🏗 3. High-Level Architecture
-Core AWS Components Used
-Service	Purpose
-AWS Organizations	Multi-account structure
-VPC	Isolated network
-ECS	Containerized application runtime
-Aurora PostgreSQL	Managed relational database
-ElastiCache Redis	In-memory caching
-S3	Secure data lake & logs
-Secrets Manager	Secure credentials storage
-KMS	Encryption key management
-CloudWatch	Monitoring & dashboards
-DynamoDB	Terraform state locking
-S3 Backend	Remote Terraform state storage
-📂 4. Project Directory Structure
-aws-terraform-foundation/
-│
-├── backend.tf
-├── main.tf
-├── providers.tf
-├── variables.tf
-├── terraform.tfstate
-├── terraform.tfstate.backup
-│
-└── modules/
-    ├── organizations/
-    ├── vpc/
-    ├── ecs/
-    ├── rds/
-    ├── elasticache/
-    ├── s3/
-    ├── secrets/
-    ├── dynamodb/
-    ├── cloudwatch/
-    ├── tagging/
-
-
-Each module is responsible for one logical part of the infrastructure.
-
-🏢 5. AWS Organizations Design (Multi-Account Strategy)
-
-Your structure follows best practices:
-
-Root Account (Management)
+```
+Root (Management Account)
 │
 ├── Security OU
-│   ├── Security-Audit Account
-│   ├── Security-Logging Account
+│   ├── Security-Audit
+│   ├── Security-Logging
 │
 ├── Infrastructure OU
-│   ├── Shared-Services Account
-│   ├── Network-Hub Account
+│   ├── Shared-Services
+│   ├── Network-Hub
 │
-├── Workloads OU
-│   ├── Production
-│   ├── Staging
-│   ├── Development
-│   ├── Sandbox
+└── Workloads OU
+    ├── Production
+    ├── Staging
+    ├── Development
+    └── Sandbox
+```
 
-Policies Applied:
+🔐 **Applied Policies:**
 
-DenyRootUserAccess (SCP)
+* DenyRootUserAccess (SCP)
+* Mandatory tagging:
 
-Tagging Policy enforcing:
+  * `Environment`
+  * `Project`
+  * `CostCenter`
 
-Environment
+---
 
-Project
+# 🌐 **VPC Networking Design**
 
-CostCenter
+### **VPC CIDR**
 
-🌐 6. VPC Networking Design
-
-Your VPC includes:
-
-CIDR Block:
+```
 10.0.0.0/16
+```
 
-Subnets:
-Type	AZ	CIDR
-Public A	us-east-1a	10.0.1.0/24
-Public B	us-east-1b	10.0.2.0/24
-Private App A	us-east-1a	10.0.11.0/24
-Private App B	us-east-1b	10.0.12.0/24
-DB Subnet A	us-east-1a	10.0.21.0/24
-DB Subnet B	us-east-1b	10.0.22.0/24
-Gateways:
+### **Subnet Layout**
 
-Internet Gateway (IGW)
+```
+VPC (10.0.0.0/16)
+│
+├── Public Subnets
+│   ├── 10.0.1.0/24  (us-east-1a)
+│   └── 10.0.2.0/24  (us-east-1b)
+│
+├── Private App Subnets
+│   ├── 10.0.11.0/24 (us-east-1a)
+│   └── 10.0.12.0/24 (us-east-1b)
+│
+└── Private DB Subnets
+    ├── 10.0.21.0/24 (us-east-1a)
+    └── 10.0.22.0/24 (us-east-1b)
+```
 
-NAT Gateway for private subnet internet access
+### **Gateways**
 
-🧠 7. Compute Layer – ECS
-ECS Cluster:
+* 🌍 Internet Gateway (IGW)
+* 🔒 NAT Gateway for private subnet internet access
 
-Name: fintech-cluster
+---
 
-Runs containerized applications
+# 🧠 **Compute Layer – Amazon ECS**
 
-Uses IAM Execution Role with least privilege
+### **ECS Cluster**
 
-Security:
+* Name: `fintech-cluster`
+* Runs containerized applications
+* Uses IAM execution role (least privilege)
 
-Dedicated ECS Security Group
+### **Security**
 
-Allowed outbound internet via NAT Gateway
+* Dedicated ECS Security Group
+* No public exposure
+* Outbound traffic only via NAT Gateway
 
-🗄 8. Database Layer – Aurora PostgreSQL
-Database:
+---
 
-Engine: Aurora PostgreSQL 14.8
+# 🗄 **Database – Aurora PostgreSQL**
 
-Multi-AZ capable
+* Engine: **Aurora PostgreSQL 14.8**
+* Multi-AZ capable
+* Encrypted with **AWS KMS**
+* Runs in private subnets
+* Accessible only from ECS
 
-Encrypted using AWS KMS
+### Terraform Resources:
 
-Security:
-
-Private subnets only
-
-Access allowed only from ECS security group
-
-No public access
-
-Terraform Resources:
-
+```hcl
 aws_rds_cluster
-
 aws_db_subnet_group
-
 aws_security_group
+```
 
-⚡ 9. Caching Layer – ElastiCache Redis
-Redis Cluster:
+---
 
-Engine: Redis 7.0
+# ⚡ **Caching – ElastiCache Redis**
 
-Multi-AZ enabled
+* Engine: **Redis 7.0**
+* Multi-AZ enabled
+* TLS encryption enabled
+* Auth token stored in **AWS Secrets Manager**
+* Accessible only from ECS
 
-Transit encryption enabled
+---
 
-Auth token stored in AWS Secrets Manager
+# 📦 **Data Lake – S3**
 
-Security:
+### Buckets:
 
-Private subnet placement
+* `fintech-data-lake-<random_id>`
+* `fintech-s3-logs-<random_id>`
 
-Access allowed only from ECS security group
+### Features:
 
-📦 10. Data Lake – S3 Buckets
-Buckets Created:
+* ✅ Versioning
+* ✅ Server-side encryption
+* ✅ Public access blocked
+* ✅ Intelligent Tiering
+* ✅ Lifecycle policies
+* ✅ Access logging enabled
 
-fintech-data-lake-<random_id>
+---
 
-fintech-s3-logs-<random_id>
+# 🔐 **Secrets Management**
 
-Features Enabled:
+Stored in **AWS Secrets Manager**:
 
-Versioning
+| Secret           | Path                   |
+| ---------------- | ---------------------- |
+| API Keys         | `fintech/api-keys`     |
+| Redis Auth Token | `fintech/redis-auth`   |
+| RDS Password     | Generated by Terraform |
 
-Server-side encryption
+ECS tasks have IAM permissions to read only required secrets.
 
-Public access blocked
+---
 
-Intelligent Tiering
-
-Lifecycle policies
-
-Logging enabled
-
-🔐 11. Secrets Management
-
-Stored in AWS Secrets Manager:
-
-API Keys (fintech/api-keys)
-
-Redis Auth Token (fintech/redis-auth)
-
-RDS Master Password (generated via Terraform)
-
-IAM Policy:
-
-Allows ECS tasks to read secrets.
-
-🔑 12. Encryption – AWS KMS
+# 🔑 **Encryption – AWS KMS**
 
 Used for:
 
-RDS encryption
-
-Secrets Manager encryption
-
-S3 encryption
+* RDS encryption
+* Secrets Manager encryption
+* S3 bucket encryption
 
 Key alias:
 
+```
 alias/fintech-rds-key
+```
 
-📊 13. Monitoring – CloudWatch
+---
 
-A custom CloudWatch dashboard:
+# 📊 **Monitoring – CloudWatch**
+
+Custom dashboard:
+
+```
+FinTech-Operations
+```
 
 Monitors:
 
-ECS health
+* ECS health
+* Database performance
+* Redis metrics
+* Application logs
 
-Database performance
+---
 
-Redis metrics
+# 🗂 **Terraform Remote Backend**
 
-Application logs
-
-Dashboard name:
-
-FinTech-Operations
-
-🗂 14. Terraform Backend (State Management)
-S3 Backend Configuration (backend.tf):
+```hcl
 terraform {
   backend "s3" {
     bucket         = "fintech-terraform-state-067970016113"
@@ -283,60 +250,58 @@ terraform {
     encrypt        = true
   }
 }
+```
 
-Why this is best practice:
+### Why this is best practice:
 
-Centralized state storage
+* Centralized state storage
+* Versioned state
+* State locking via DynamoDB
+* Encrypted state files
 
-Versioned state
+---
 
-State locking via DynamoDB
+# 🛡 **Security Best Practices Implemented**
 
-Encrypted state files
+✔ No public databases
+✔ Encryption at rest & in transit
+✔ IAM least privilege
+✔ Secure secrets storage
+✔ Network segmentation
+✔ No hardcoded passwords
+✔ Centralized tagging
+✔ AWS Organizations SCP policies
 
-🛡 15. Security Best Practices Followed
+---
 
-This project follows:
+# 🔁 **Deployment Workflow**
 
-No public databases
-
-Encryption at rest & in transit
-
-Least privilege IAM
-
-Secrets stored securely
-
-Network segmentation
-
-No hardcoded passwords
-
-Tag governance
-
-SCP policies in Organizations
-
-🔁 16. Deployment Workflow
-Initialize Terraform:
+```bash
 terraform init -reconfigure
-
-Validate configuration:
 terraform validate
-
-Plan changes:
 terraform plan
-
-Apply changes:
 terraform apply
+```
 
-🎯 17. Summary
+---
 
-Your project is now:
+# 🎯 **Project Status**
 
-✔ Production-ready
-✔ Secure
-✔ Scalable
-✔ Modular
-✔ Professional
-✔ Cloud-native
-✔ Enterprise-grade
+| Feature           | Status        |
+| ----------------- | ------------- |
+| Multi-Account AWS | ✅ Implemented |
+| Terraform Modules | ✅ Implemented |
+| Security Controls | ✅ Implemented |
+| Monitoring        | ✅ Implemented |
+| High Availability | ✅ Implemented |
+| Encryption        | ✅ Implemented |
+
+---
+
+# 🏷 **Tags**
+
+```
 # AWS-Architecting-Capstone-Project
-# AWS-Architecting-Capstone-Project
+```
+
+---
