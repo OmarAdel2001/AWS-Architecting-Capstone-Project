@@ -1,9 +1,18 @@
+
 ---
-```
+
 # 🚀 **AWS Terraform Foundation – FinTech Platform**
 
+<p align="center">
+  <img src="https://img.shields.io/badge/AWS-Cloud-orange">
+  <img src="https://img.shields.io/badge/Terraform-IaC-purple">
+  <img src="https://img.shields.io/badge/Architecture-Enterprise-blue">
+  <img src="https://img.shields.io/badge/Security-Best%20Practices-green">
+  <img src="https://img.shields.io/badge/Status-Production%20Ready-success">
+</p>
+
 > **Enterprise-grade AWS Cloud Foundation for a FinTech Digital Banking Platform built with Terraform**
-```
+
 ---
 
 ## 📌 **Project Overview**
@@ -305,3 +314,4 @@ terraform apply
 ```
 
 ---
+
