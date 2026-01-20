@@ -61,7 +61,7 @@ resource "aws_security_group_rule" "allow_ecs_to_db" {
 resource "aws_rds_cluster" "aurora" {
   cluster_identifier      = "fintech-cluster"
   engine                  = "aurora-postgresql"
-  engine_version          = "14.8"
+  engine_version          = "14.9"
   master_username         = "fintechadmin"
   master_password         = var.db_master_password
   db_subnet_group_name    = aws_db_subnet_group.fintech.name

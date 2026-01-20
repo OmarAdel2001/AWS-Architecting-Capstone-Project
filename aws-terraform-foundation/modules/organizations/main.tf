@@ -26,9 +26,6 @@ resource "aws_organizations_policy" "deny_root" {
     ]
   })
 
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 
